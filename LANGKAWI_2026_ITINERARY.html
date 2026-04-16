@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🌴 Langkawi 2026 — Day-by-Day Itinerary</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --teal:#0a7c6c;--teal-mid:#0f9b88;--teal-light:#e0f4f1;
+  --ocean:#0c2340;--ocean-soft:#1a3a5c;
+  --gold:#c8930a;--gold-light:#fdf0d0;
+  --sand:#f7e9d3;--cream:#faf8f3;--parchment:#f1ebe0;
+  --jungle:#2d6a4f;--warm-gray:#6b7a80;--white:#fff;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;scroll-padding-top:60px;}
+body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--ocean);line-height:1.6;}
+
+/* NAV */
+.sitenav{position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(12,35,64,0.97);backdrop-filter:blur(12px);padding:0 16px;display:flex;align-items:center;gap:2px;height:52px;overflow-x:auto;overflow-y:hidden;scrollbar-width:none;border-bottom:1px solid rgba(200,147,10,0.3);}
+.sitenav::-webkit-scrollbar{display:none;}
+.sitenav-logo{font-family:'Playfair Display',serif;color:var(--gold);font-size:17px;font-weight:700;white-space:nowrap;margin-right:12px;flex-shrink:0;text-decoration:none;}
+.sitenav-div{width:1px;height:18px;background:rgba(255,255,255,0.1);flex-shrink:0;margin:0 6px;}
+.sitenav-btn{background:none;border:none;cursor:pointer;color:rgba(255,255,255,0.55);font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;white-space:nowrap;padding:5px 10px;border-radius:6px;transition:all 0.18s;flex-shrink:0;text-decoration:none;letter-spacing:0.2px;}
+.sitenav-btn:hover{color:white;background:rgba(255,255,255,0.1);}
+.sitenav-btn.active{color:var(--gold);background:rgba(200,147,10,0.18);border:1px solid rgba(200,147,10,0.25);}
+.sitenav-btn.home{color:var(--gold);background:rgba(200,147,10,0.12);border:1px solid rgba(200,147,10,0.2);margin-left:auto;}
+.sitenav-btn.home:hover{background:var(--gold);color:var(--ocean);}
+
+/* HERO */
+.hero{background:linear-gradient(135deg,var(--teal) 0%,#064a3e 60%,var(--ocean) 100%);color:white;padding:100px 40px 50px;text-align:center;position:relative;overflow:hidden;}
+.hero::before{content:'🌴';position:absolute;top:-20px;right:-20px;font-size:200px;opacity:0.06;transform:rotate(-15deg);}
+.hero h1{font-family:'Playfair Display',serif;font-size:clamp(28px,6vw,42px);font-weight:700;letter-spacing:-0.5px;margin-bottom:8px;}
+.hero .subtitle{font-size:0.9rem;font-weight:400;opacity:0.75;margin-bottom:20px;}
+.hero-pills{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;}
+.hero-pill{background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);border-radius:100px;padding:5px 14px;font-size:11px;font-weight:500;}
+
+/* MAIN */
+.main{max-width:860px;margin:0 auto;padding:40px 20px 80px;}
+
+/* DAY HEADER */
+.day-header{display:flex;align-items:center;gap:12px;margin:40px 0 20px;padding-bottom:14px;border-bottom:2px solid var(--parchment);}
+.day-badge{color:white;border-radius:8px;padding:5px 14px;font-size:12px;font-weight:700;letter-spacing:0.5px;}
+.day-badge.d1{background:var(--teal);}
+.day-badge.d2{background:var(--ocean-soft);}
+.day-title{font-family:'Playfair Display',serif;font-size:20px;font-weight:700;}
+.day-date{font-size:12px;color:var(--warm-gray);margin-left:auto;white-space:nowrap;}
+
+/* TIME BLOCKS */
+.time-row{background:var(--white);border-radius:14px;box-shadow:0 2px 12px rgba(12,35,64,0.07);margin-bottom:12px;overflow:hidden;border:1px solid var(--parchment);display:flex;}
+.time-col{width:90px;flex-shrink:0;background:var(--teal-light);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px 10px;text-align:center;border-right:1px solid rgba(10,124,108,0.12);}
+.time-col.night{background:var(--ocean);border-right-color:rgba(255,255,255,0.06);}
+.time-icon{font-size:22px;margin-bottom:4px;}
+.time-clock{font-size:11px;font-weight:700;color:var(--teal);letter-spacing:0.5px;}
+.time-col.night .time-clock{color:var(--gold);}
+.time-body{flex:1;padding:16px 20px;}
+.time-label{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--teal);margin-bottom:4px;}
+.time-title{font-size:15px;font-weight:600;color:var(--ocean);margin-bottom:6px;}
+.time-desc{font-size:13px;color:var(--warm-gray);line-height:1.6;}
+.time-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;}
+.time-tag{background:var(--teal-light);color:var(--teal);border-radius:100px;padding:2px 10px;font-size:11px;font-weight:500;}
+.time-tag.gold{background:var(--gold-light);color:var(--gold);}
+
+/* TIP BOX */
+.tip-box{background:var(--teal-light);border-left:3px solid var(--teal);border-radius:0 12px 12px 0;padding:14px 18px;margin:16px 0 32px;font-size:13px;color:var(--ocean);display:flex;gap:10px;align-items:flex-start;}
+.tip-box strong{color:var(--teal);}
+
+/* INFO CARDS */
+.info-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px;margin:32px 0;}
+.info-card{background:var(--white);border-radius:16px;padding:20px;box-shadow:0 2px 12px rgba(12,35,64,0.07);border:1px solid var(--parchment);}
+.info-card-title{font-family:'Playfair Display',serif;font-size:15px;font-weight:700;color:var(--ocean);margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+.info-list{list-style:none;padding:0;}
+.info-list li{font-size:12px;color:var(--warm-gray);padding:5px 0;border-bottom:1px solid var(--parchment);display:flex;gap:8px;}
+.info-list li:last-child{border-bottom:none;}
+.info-list li::before{content:'→';color:var(--teal);flex-shrink:0;}
+
+/* QUICK REF */
+.quick-ref{background:var(--ocean);border-radius:20px;padding:28px;color:white;margin:32px 0;}
+.qr-title{font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:var(--gold);margin-bottom:16px;}
+.qr-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;}
+.qr-item{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:12px 14px;}
+.qr-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--gold);margin-bottom:4px;}
+.qr-val{font-size:13px;color:rgba(255,255,255,0.85);}
+</style>
+</head>
+<body>
+
+<nav class="sitenav">
+  <a class="sitenav-logo" href="index.html">🌴 Langkawi</a>
+  <div class="sitenav-div"></div>
+  <a class="sitenav-btn" href="LANGKAWI_2026_GUIDE.html">📖 Guide</a>
+  <a class="sitenav-btn" href="LANGKAWI_2026_MAP.html">🗺️ Map</a>
+  <a class="sitenav-btn active" href="LANGKAWI_2026_ITINERARY.html">📋 Itinerary</a>
+  <a class="sitenav-btn" href="TICKETS.html">🎟️ Bookings</a>
+  <a class="sitenav-btn home" href="index.html">🏠 Home</a>
+</nav>
+
+<div class="hero">
+  <h1>2-Day Langkawi Itinerary</h1>
+  <div class="subtitle">Pavan Abeysinghe · Pelangi Beach Resort & Spa · Pantai Cenang</div>
+  <div class="hero-pills">
+    <span class="hero-pill">🏖️ Pantai Cenang</span>
+    <span class="hero-pill">🚡 SkyCab & SkyBridge</span>
+    <span class="hero-pill">🌅 Sunset Views</span>
+    <span class="hero-pill">🦞 Fresh Seafood</span>
+    <span class="hero-pill">🌿 Oriental Village</span>
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- QUICK REF -->
+  <div class="quick-ref">
+    <div class="qr-title">📌 Quick Reference</div>
+    <div class="qr-grid">
+      <div class="qr-item"><div class="qr-label">Resort</div><div class="qr-val">Pelangi Beach Resort & Spa</div></div>
+      <div class="qr-item"><div class="qr-label">Beach</div><div class="qr-val">Pantai Cenang</div></div>
+      <div class="qr-item"><div class="qr-label">Currency</div><div class="qr-val">Malaysian Ringgit (RM)</div></div>
+      <div class="qr-item"><div class="qr-label">Transport</div><div class="qr-val">Grab / Car rental</div></div>
+      <div class="qr-item"><div class="qr-label">SkyCab Loc</div><div class="qr-val">Oriental Village, ~20 min</div></div>
+      <div class="qr-item"><div class="qr-label">Night Market</div><div class="qr-val">Thu: Temoyong (Cenang)</div></div>
+    </div>
+  </div>
+
+  <!-- DAY 1 -->
+  <div class="day-header" id="day1">
+    <span class="day-badge d1">DAY 1</span>
+    <div class="day-title">Beach, Sunset & Island Vibes</div>
+    <div class="day-date">Pantai Cenang</div>
+  </div>
+
+  <div class="time-row">
+    <div class="time-col"><span class="time-icon">🛬</span><span class="time-clock">9:00 AM</span></div>
+    <div class="time-body">
+      <div class="time-label">Morning</div>
+      <div class="time-title">Arrive & Check In to Pelangi Resort</div>
+      <div class="time-desc">Check into Pelangi Beach Resort & Spa. Take a slow breakfast, unpack, and take your first look at Pantai Cenang. Resist the urge to rush — let the island pace set in.</div>
+      <div class="time-tags"><span class="time-tag">Pelangi Resort</span><span class="time-tag">Pantai Cenang</span></div>
+    </div>
+  </div>
+
+  <div class="time-row">
+    <div class="time-col"><span class="time-icon">🍽️</span><span class="time-clock">12:30 PM</span></div>
+    <div class="time-body">
+      <div class="time-label">Lunch</div>
+      <div class="time-title">Casual Cenang Lunch</div>
+      <div class="time-desc">Head along the Pantai Cenang strip for lunch. Try FatCUPID for local fusion (nyonya laksa, beef rendang) or grab nasi lemak from a roadside warung for an authentic first taste of Langkawi.</div>
+      <div class="time-tags"><span class="time-tag">FatCUPID</span><span class="time-tag">Nasi Lemak</span><span class="time-tag gold">RM 15–40</span></div>
+    </div>
+  </div>
+
+  <div class="time-row">
+    <div class="time-col"><span class="time-icon">🏖️</span><span class="time-clock">2:00 PM</span></div>
+    <div class="time-body">
+      <div class="time-label">Afternoon</div>
+      <div class="time-title">Beach Walk & Cenang Strip</div>
+      <div class="time-desc">Stroll the beachfront, browse duty-free shops along Cenang Road, or head 10 minutes south to quieter Pantai Tengah. Duty-free means affordable alcohol and chocolate — stock up if you'd like.</div>
+      <div class="time-tags"><span class="time-tag">Pantai Cenang</span><span class="time-tag">Duty-Free Shopping</span><span class="time-tag">Pantai Tengah</span></div>
+    </div>
+  </div>
+
+  <div class="time-row">
+    <div class="time-col night"><span class="time-icon">🌇</span><span class="time-clock">6:00 PM</span></div>
+    <div class="time-body">
+      <div class="time-label">Sunset</div>
+      <div class="time-title">Golden Hour at the Beach</div>
+      <div class="time-desc">Return to the beachfront for drinks as the Andaman Sun drops. The Cliff Restaurant offers extraordinary sunset views over the sea — book ahead for a table at the edge.</div>
+      <div class="time-tags"><span class="time-tag">The Cliff Restaurant</span><span class="time-tag gold">Book ahead</span></div>
+    </div>
+  </div>
+
+  <div class="time-row">
+    <div class="time-col night"><span class="time-icon">🌙</span><span class="time-clock">7:30 PM</span></div>
+    <div class="time-body">
+      <div class="time-label">Evening</div>
+      <div class="time-title">Night Market or Seafood Dinner</div>
+      <div class="time-desc">If it's Thursday: the Temoyong night market at Pantai Cenang has 50+ stalls of ikan bakar, nasi lemak, satay, and tropical fruit. Otherwise: Orkid Ria Seafood for fresh lobster and black pepper tiger prawns under hanging lanterns.</div>
+      <div class="time-tags"><span class="time-tag">Orkid Ria Seafood</span><span class="time-tag">Thu: Temoyong Market</span><span class="time-tag gold">Bring cash</span></div>
+    </div>
+  </div>
+
+  <div class="tip-box">
+    <span>💡</span>
+    <div><strong>Day 1 motto:</strong> Slow down. This day is intentionally easy. A rested first day makes Day 2's early start far more enjoyable — and you'll need it for the cable car.</div>
+  </div>
+
+  <!-- DAY 2 -->
+  <div class="day-header" id="day2">
+    <span class="day-badge d2">DAY 2</span>
+    <div class="day-title">SkyCab, SkyBridge & Mountain Views</div>
+    <div class="day-date">Oriental Village</div>
+  </div>
+
+  <div class="time-row">
+    <div class="time-col"><span class="time-icon">🌄</span><span class="time-clock">8:00 AM</span></div>
+    <div class="time-body">
+      <div class="time-label">Early Morning</div>
+      <div class="time-title">Early Start — Beat the Crowd</div>
+      <div class="time-desc">Leave Pelangi by 8am. Morning gives you the best light for photos, shorter queues at the SkyCab, and cooler temperatures. Drive or Grab to Oriental Village — approximately 20 minutes from Pantai Cenang.</div>
+      <div class="time-tags"><span class="time-tag">Oriental Village</span><span class="time-tag">~20 min drive</span><span class="time-tag gold">Leave by 8am</span></div>
+    </div>
+  </div>
+
+  <div class="time-row">
+    <div class="time-col"><span class="time-icon">🚡</span><span class="time-clock">9:00 AM</span></div>
+    <div class="time-body">
+      <div class="time-label">Morning</div>
+      <div class="time-title">Langkawi SkyCab</div>
+      <div class="time-desc">Board the SkyCab — one of the world's steepest cable cars — rising 708 metres above sea level on Machinchang mountain. Three stations: Pantai Kok Base, Middle Station, and Summit. Views begin before you reach the top.</div>
+      <div class="time-tags"><span class="time-tag">Langkawi Cable Car</span><span class="time-tag">708m summit</span><span class="time-tag gold">Book tickets online</span></div>
+    </div>
+  </div>
+
+  <div class="time-row">
+    <div class="time-col"><span class="time-icon">🌉</span><span class="time-clock">10:30 AM</span></div>
+    <div class="time-body">
+      <div class="time-label">Late Morning</div>
+      <div class="time-title">Langkawi SkyBridge Walk</div>
+      <div class="time-desc">Walk the world's longest curved suspension bridge — 125 metres, hanging above dense jungle canopy. The 360° panoramic views of the Andaman Sea, surrounding islands, and rainforest peaks are genuinely breathtaking. Don't rush this.</div>
+      <div class="time-tags"><span class="time-tag">125m suspension bridge</span><span class="time-tag">360° views</span></div>
+    </div>
+  </div>
+
+  <div class="time-row">
+    <div class="time-col"><span class="time-icon">🍜</span><span class="time-clock">12:30 PM</span></div>
+    <div class="time-body">
+      <div class="time-label">Midday</div>
+      <div class="time-title">Lunch at Oriental Village</div>
+      <div class="time-desc">Return to Oriental Village's lakeside complex. Rest your legs and browse the colourful architecture blending Malay, Chinese, and Japanese styles. Several cafés and restaurants available — cold drinks are a priority after the altitude.</div>
+      <div class="time-tags"><span class="time-tag">Oriental Village</span><span class="time-tag">Lakeside dining</span></div>
+    </div>
+  </div>
+
+  <div class="time-row">
+    <div class="time-col"><span class="time-icon">💧</span><span class="time-clock">2:00 PM</span></div>
+    <div class="time-body">
+      <div class="time-label">Optional Add-On</div>
+      <div class="time-title">Telaga Tujuh — Seven Wells Waterfall</div>
+      <div class="time-desc">Just 10 minutes from Oriental Village. A short jungle hike leads to seven cascading natural limestone pools. Excellent for a cool, peaceful swim surrounded by jungle. Easy for all fitness levels.</div>
+      <div class="time-tags"><span class="time-tag">10 min from SkyCab</span><span class="time-tag">Swimming</span><span class="time-tag gold">Optional</span></div>
+    </div>
+  </div>
+
+  <div class="time-row">
+    <div class="time-col"><span class="time-icon">🏊</span><span class="time-clock">4:00 PM</span></div>
+    <div class="time-body">
+      <div class="time-label">Afternoon Return</div>
+      <div class="time-title">Back to Pelangi — Pool & Spa</div>
+      <div class="time-desc">Return to Pelangi by 4pm with daylight to spare. One last pool session, a spa treatment, or a peaceful final beach walk. Pack up and enjoy the slower pace before the farewell dinner.</div>
+      <div class="time-tags"><span class="time-tag">Pelangi Resort</span><span class="time-tag">Pool / Spa</span></div>
+    </div>
+  </div>
+
+  <div class="time-row">
+    <div class="time-col night"><span class="time-icon">🦞</span><span class="time-clock">7:00 PM</span></div>
+    <div class="time-body">
+      <div class="time-label">Farewell Dinner</div>
+      <div class="time-title">Final Sunset Dinner</div>
+      <div class="time-desc">End the trip properly. Pia's The Padi for outstanding local cuisine against paddy field views, or Orkid Ria for a seafood feast. Toast to a perfect island escape with a duty-free sundowner on the beach.</div>
+      <div class="time-tags"><span class="time-tag">Pia's The Padi</span><span class="time-tag">Orkid Ria</span><span class="time-tag gold">Farewell dinner</span></div>
+    </div>
+  </div>
+
+  <div class="tip-box">
+    <span>💡</span>
+    <div><strong>Swap option:</strong> If you prefer sea over mountains, replace Day 2 with an island hopping tour to Dayang Bunting Lake and snorkelling on the Andaman. Book from Cenang Jetty the evening before — equally spectacular.</div>
+  </div>
+
+  <!-- INFO CARDS -->
+  <div class="info-grid">
+    <div class="info-card">
+      <div class="info-card-title">🚗 Getting Around</div>
+      <ul class="info-list">
+        <li>Grab works at Pantai Cenang & airport</li>
+        <li>Car rental: RM 70–120/day (most freedom)</li>
+        <li>Oriental Village: ~20 min from Pelangi</li>
+        <li>Taxis: unmetered — negotiate upfront</li>
+      </ul>
+    </div>
+    <div class="info-card">
+      <div class="info-card-title">🍽️ Restaurants Quick Pick</div>
+      <ul class="info-list">
+        <li>Lunch Day 1: FatCUPID (Pantai Tengah)</li>
+        <li>Dinner Day 1: Orkid Ria / Night Market</li>
+        <li>Lunch Day 2: Oriental Village cafés</li>
+        <li>Dinner Day 2: Pia's The Padi</li>
+      </ul>
+    </div>
+    <div class="info-card">
+      <div class="info-card-title">💰 Estimated Budget</div>
+      <ul class="info-list">
+        <li>SkyCab + SkyBridge: ~RM 55/pax</li>
+        <li>Meals: RM 80–150/day</li>
+        <li>Grab rides: RM 10–25/trip</li>
+        <li>Duty-free: budget as desired 🍺</li>
+      </ul>
+    </div>
+    <div class="info-card">
+      <div class="info-card-title">📋 Book in Advance</div>
+      <ul class="info-list">
+        <li>SkyCab tickets — book online</li>
+        <li>The Cliff sunset dinner — reserve ahead</li>
+        <li>Island hopping — day before from jetty</li>
+        <li>Mangrove tour — WhatsApp booking</li>
+      </ul>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

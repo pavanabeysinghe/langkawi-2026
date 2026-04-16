@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🎟️ Langkawi 2026 — Bookings & Tickets</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --teal:#0a7c6c;--teal-light:#e0f4f1;
+  --ocean:#0c2340;--ocean-soft:#1a3a5c;
+  --gold:#c8930a;--gold-light:#fdf0d0;
+  --cream:#faf8f3;--parchment:#f1ebe0;--warm-gray:#6b7a80;--white:#fff;
+  --green:#1a7a4a;--green-light:#eaf7ef;
+  --red:#9b2020;--red-light:#fdecea;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--ocean);}
+
+/* PIN SCREEN */
+#pinScreen{position:fixed;inset:0;z-index:9999;background:var(--ocean);display:flex;align-items:center;justify-content:center;}
+.pin-box{background:rgba(255,255,255,0.05);border:1px solid rgba(200,147,10,0.25);border-radius:20px;padding:40px 36px;text-align:center;max-width:320px;width:90%;}
+.pin-flag{font-size:48px;margin-bottom:16px;}
+.pin-title{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:white;margin-bottom:6px;}
+.pin-sub{font-size:13px;color:rgba(255,255,255,0.45);margin-bottom:32px;}
+.pin-dots{display:flex;gap:14px;justify-content:center;margin-bottom:28px;}
+.pin-dot{width:18px;height:18px;border-radius:50%;background:rgba(255,255,255,0.15);border:2px solid rgba(255,255,255,0.2);transition:all 0.2s;}
+.pin-dot.filled{background:var(--gold);border-color:var(--gold);}
+.pin-dot.error{background:#e74c3c;border-color:#e74c3c;animation:shake 0.4s ease;}
+.pin-keypad{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;max-width:240px;margin:0 auto;}
+.pin-key{background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:16px 0;font-size:20px;font-weight:600;color:white;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.15s;user-select:none;}
+.pin-key:hover{background:rgba(255,255,255,0.14);}
+.pin-key:active{transform:scale(0.94);}
+.pin-key.del{font-size:16px;color:rgba(255,255,255,0.6);}
+.pin-key.zero{grid-column:2;}
+.pin-error{color:#e74c3c;font-size:13px;font-weight:600;margin-top:16px;min-height:20px;}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+
+/* MAIN */
+#main{display:none;}
+.header{background:var(--ocean);border-bottom:1px solid rgba(200,147,10,0.3);padding:0 20px;display:flex;align-items:center;gap:10px;height:52px;position:sticky;top:0;z-index:100;}
+.hlogo{font-family:'Playfair Display',serif;color:var(--gold);font-size:17px;font-weight:700;text-decoration:none;}
+.htitle{color:rgba(255,255,255,0.5);font-size:12px;flex:1;}
+.hbtn{background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.12);color:rgba(255,255,255,0.75);font-size:12px;font-weight:500;padding:5px 12px;border-radius:6px;cursor:pointer;font-family:'DM Sans',sans-serif;text-decoration:none;transition:all 0.2s;white-space:nowrap;}
+.hbtn:hover{background:rgba(255,255,255,0.15);color:white;}
+.hbtn.gold{background:rgba(200,147,10,0.15);border-color:rgba(200,147,10,0.3);color:var(--gold);}
+.hbtn.gold:hover{background:var(--gold);color:var(--ocean);}
+.hbtn.lock{background:rgba(155,32,32,0.15);border-color:rgba(155,32,32,0.3);color:#e74c3c;}
+.hbtn.lock:hover{background:#e74c3c;color:white;}
+
+.page{max-width:860px;margin:0 auto;padding:28px 20px 60px;}
+.page-title{font-family:'Playfair Display',serif;font-size:26px;font-weight:700;color:var(--ocean);margin-bottom:6px;}
+.page-sub{font-size:13px;color:var(--warm-gray);margin-bottom:24px;}
+
+.alert{background:var(--gold-light);border:1px solid rgba(200,147,10,0.3);border-left:4px solid var(--gold);border-radius:0 10px 10px 0;padding:13px 16px;margin-bottom:24px;font-size:13px;color:var(--ocean);line-height:1.6;}
+
+.section-h{display:flex;align-items:center;gap:10px;margin:32px 0 14px;padding-bottom:10px;border-bottom:2px solid var(--parchment);}
+.day-badge{color:white;border-radius:8px;padding:4px 12px;font-size:12px;font-weight:700;}
+.section-h h2{font-family:'Playfair Display',serif;font-size:18px;font-weight:700;}
+.section-h .dt{font-size:12px;color:var(--warm-gray);margin-left:auto;}
+
+/* TICKET CARD */
+.ticket{background:var(--white);border-radius:14px;box-shadow:0 2px 14px rgba(12,35,64,0.08);margin-bottom:16px;overflow:hidden;border:1px solid var(--parchment);}
+.t-head{padding:16px 20px;display:flex;gap:12px;align-items:flex-start;border-bottom:1px solid var(--parchment);}
+.t-icon{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;}
+.t-info{flex:1;}
+.t-name{font-size:15px;font-weight:700;color:var(--ocean);margin-bottom:2px;}
+.t-sub{font-size:12px;color:var(--warm-gray);}
+.t-status{display:inline-flex;align-items:center;gap:5px;border-radius:100px;padding:4px 12px;font-size:11px;font-weight:700;margin-top:6px;}
+.t-status.confirmed{background:var(--green-light);color:var(--green);}
+.t-status.pending{background:var(--gold-light);color:var(--gold);}
+.t-status.optional{background:var(--teal-light);color:var(--teal);}
+.t-body{padding:16px 20px;display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;}
+.t-field label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--warm-gray);display:block;margin-bottom:3px;}
+.t-field span{font-size:13px;font-weight:600;color:var(--ocean);}
+.t-note{background:var(--teal-light);border-radius:0 0 14px 14px;padding:12px 20px;font-size:12px;color:var(--teal);border-top:1px solid rgba(10,124,108,0.12);}
+
+/* CHECKLIST */
+.checklist{background:var(--white);border-radius:14px;padding:20px;box-shadow:0 2px 14px rgba(12,35,64,0.08);border:1px solid var(--parchment);margin-top:32px;}
+.checklist h3{font-family:'Playfair Display',serif;font-size:17px;font-weight:700;color:var(--ocean);margin-bottom:16px;}
+.check-item{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--parchment);cursor:pointer;}
+.check-item:last-child{border-bottom:none;}
+.check-box{width:20px;height:20px;border-radius:6px;border:2px solid var(--parchment);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all 0.15s;background:var(--white);}
+.check-item.done .check-box{background:var(--teal);border-color:var(--teal);color:white;font-size:11px;}
+.check-label{font-size:13px;color:var(--ocean);flex:1;}
+.check-item.done .check-label{text-decoration:line-through;color:var(--warm-gray);}
+.check-note{font-size:11px;color:var(--warm-gray);}
+</style>
+</head>
+<body>
+
+<!-- PIN SCREEN -->
+<div id="pinScreen">
+  <div class="pin-box">
+    <div class="pin-flag">🌴</div>
+    <div class="pin-title">Langkawi 2026</div>
+    <div class="pin-sub">Bookings & Tickets · Private</div>
+    <div class="pin-dots">
+      <div class="pin-dot" id="d0"></div>
+      <div class="pin-dot" id="d1"></div>
+      <div class="pin-dot" id="d2"></div>
+      <div class="pin-dot" id="d3"></div>
+    </div>
+    <div class="pin-keypad">
+      <button class="pin-key" onclick="enter(1)">1</button>
+      <button class="pin-key" onclick="enter(2)">2</button>
+      <button class="pin-key" onclick="enter(3)">3</button>
+      <button class="pin-key" onclick="enter(4)">4</button>
+      <button class="pin-key" onclick="enter(5)">5</button>
+      <button class="pin-key" onclick="enter(6)">6</button>
+      <button class="pin-key" onclick="enter(7)">7</button>
+      <button class="pin-key" onclick="enter(8)">8</button>
+      <button class="pin-key" onclick="enter(9)">9</button>
+      <button class="pin-key zero" onclick="enter(0)">0</button>
+      <button class="pin-key del" onclick="del()">⌫</button>
+    </div>
+    <div class="pin-error" id="pinErr"></div>
+  </div>
+</div>
+
+<!-- MAIN CONTENT -->
+<div id="main">
+  <div class="header">
+    <a class="hlogo" href="index.html">🌴 Langkawi</a>
+    <span class="htitle">Bookings & Tickets</span>
+    <a class="hbtn" href="LANGKAWI_2026_GUIDE.html">📖 Guide</a>
+    <a class="hbtn" href="LANGKAWI_2026_MAP.html">🗺️ Map</a>
+    <a class="hbtn gold" href="index.html">🏠 Home</a>
+    <button class="hbtn lock" onclick="lock()">🔒 Lock</button>
+  </div>
+
+  <div class="page">
+    <div class="page-title">Bookings & Tickets</div>
+    <div class="page-sub">Pelangi Beach Resort · Langkawi SkyCab · Island Hopping · Restaurant Reservations</div>
+
+    <div class="alert">
+      📌 <strong>Update your details:</strong> Replace the placeholder booking references below with your actual confirmation numbers, dates, and booking links. This page is PIN-protected and stays private.
+    </div>
+
+    <!-- ACCOMMODATION -->
+    <div class="section-h">
+      <span class="day-badge" style="background:var(--ocean-soft)">🏨</span>
+      <h2>Accommodation</h2>
+      <span class="dt">2 Nights</span>
+    </div>
+
+    <div class="ticket">
+      <div class="t-head">
+        <div class="t-icon" style="background:#e0f4f1">🏨</div>
+        <div class="t-info">
+          <div class="t-name">Pelangi Beach Resort & Spa</div>
+          <div class="t-sub">Pantai Cenang, Langkawi, Kedah, Malaysia</div>
+          <span class="t-status confirmed">✓ Confirmed</span>
+        </div>
+      </div>
+      <div class="t-body">
+        <div class="t-field"><label>Check-in</label><span>— / — / 2026</span></div>
+        <div class="t-field"><label>Check-out</label><span>— / — / 2026</span></div>
+        <div class="t-field"><label>Room Type</label><span>Beach Chalet</span></div>
+        <div class="t-field"><label>Booking Ref</label><span>PBLK-XXXX</span></div>
+        <div class="t-field"><label>Guests</label><span>1 Adult</span></div>
+        <div class="t-field"><label>Contact</label><span>+60 4-952 8888</span></div>
+      </div>
+      <div class="t-note">📍 Beachfront on Pantai Cenang · Check-in from 3pm · Late checkout available upon request</div>
+    </div>
+
+    <!-- ACTIVITIES -->
+    <div class="section-h">
+      <span class="day-badge" style="background:var(--teal)">🎟️</span>
+      <h2>Activities & Attractions</h2>
+      <span class="dt">Day 2</span>
+    </div>
+
+    <div class="ticket">
+      <div class="t-head">
+        <div class="t-icon" style="background:#e0f4f1">🚡</div>
+        <div class="t-info">
+          <div class="t-name">Langkawi SkyCab + SkyBridge</div>
+          <div class="t-sub">Panorama Langkawi · Oriental Village, Burau Bay</div>
+          <span class="t-status pending">⏳ Book Online</span>
+        </div>
+      </div>
+      <div class="t-body">
+        <div class="t-field"><label>Visit Date</label><span>— / — / 2026</span></div>
+        <div class="t-field"><label>Time Slot</label><span>9:00 AM (morning)</span></div>
+        <div class="t-field"><label>Ticket Type</label><span>SkyCab + SkyBridge</span></div>
+        <div class="t-field"><label>Price</label><span>~RM 55/pax</span></div>
+        <div class="t-field"><label>Booking Ref</label><span>PNL-XXXX</span></div>
+        <div class="t-field"><label>Website</label><span>panoramalangkawi.com</span></div>
+      </div>
+      <div class="t-note">⚠️ Book online in advance — queues can be very long. Go early morning for shorter waits and better visibility.</div>
+    </div>
+
+    <div class="ticket">
+      <div class="t-head">
+        <div class="t-icon" style="background:#eaf7ef">🛥️</div>
+        <div class="t-info">
+          <div class="t-name">Island Hopping Tour</div>
+          <div class="t-sub">Cenang Jetty · Dayang Bunting, Pulau Singa Besar, Snorkelling</div>
+          <span class="t-status optional">◎ Optional</span>
+        </div>
+      </div>
+      <div class="t-body">
+        <div class="t-field"><label>Departs</label><span>Cenang Jetty</span></div>
+        <div class="t-field"><label>Duration</label><span>~5–6 hours</span></div>
+        <div class="t-field"><label>Price</label><span>~RM 35–60/pax</span></div>
+        <div class="t-field"><label>Includes</label><span>Snorkel gear, life jacket</span></div>
+        <div class="t-field"><label>Booking</label><span>Book at jetty or hotel</span></div>
+      </div>
+      <div class="t-note">📍 Book the evening before at Cenang Jetty or through Pelangi concierge. Swap this for the SkyCab if you prefer sea over mountains.</div>
+    </div>
+
+    <div class="ticket">
+      <div class="t-head">
+        <div class="t-icon" style="background:#eaf7ef">🌿</div>
+        <div class="t-info">
+          <div class="t-name">Kilim Karst Geoforest Mangrove Tour</div>
+          <div class="t-sub">Kilim Jetty · Bat Cave, Eagle Watch, Fish Farm</div>
+          <span class="t-status optional">◎ Optional</span>
+        </div>
+      </div>
+      <div class="t-body">
+        <div class="t-field"><label>Duration</label><span>2–3 hours</span></div>
+        <div class="t-field"><label>Boat Type</label><span>Private 8-seater</span></div>
+        <div class="t-field"><label>Price</label><span>~RM 270/boat</span></div>
+        <div class="t-field"><label>Departs</label><span>Kilim Jetty</span></div>
+        <div class="t-field"><label>Booking</label><span>WhatsApp booking</span></div>
+      </div>
+      <div class="t-note">🦅 Eagles are best seen morning. Book via WhatsApp — operators respond within hours. Bat Cave entry is a small extra fee.</div>
+    </div>
+
+    <!-- DINING -->
+    <div class="section-h">
+      <span class="day-badge" style="background:#c04a1a">🍽️</span>
+      <h2>Restaurant Reservations</h2>
+      <span class="dt">Both Days</span>
+    </div>
+
+    <div class="ticket">
+      <div class="t-head">
+        <div class="t-icon" style="background:#fdf0d0">🌅</div>
+        <div class="t-info">
+          <div class="t-name">The Cliff Restaurant — Sunset Dinner</div>
+          <div class="t-sub">Pantai Cenang · Malay-Western Fusion · Sea Views</div>
+          <span class="t-status pending">⏳ Reserve Ahead</span>
+        </div>
+      </div>
+      <div class="t-body">
+        <div class="t-field"><label>Date</label><span>Day 1 Evening</span></div>
+        <div class="t-field"><label>Time</label><span>6:30 PM (sunset)</span></div>
+        <div class="t-field"><label>Guests</label><span>1</span></div>
+        <div class="t-field"><label>Request</label><span>Beachfront table</span></div>
+      </div>
+      <div class="t-note">🌅 Sunset tables fill up fast — call or email ahead to request a sea-view spot for golden hour.</div>
+    </div>
+
+    <div class="ticket">
+      <div class="t-head">
+        <div class="t-icon" style="background:#e0f4f1">🌾</div>
+        <div class="t-info">
+          <div class="t-name">Pia's The Padi — Farewell Dinner</div>
+          <div class="t-sub">Near Pantai Cenang · Local Malay Cuisine · Paddy Field Views</div>
+          <span class="t-status pending">⏳ Reserve Ahead</span>
+        </div>
+      </div>
+      <div class="t-body">
+        <div class="t-field"><label>Date</label><span>Day 2 Evening</span></div>
+        <div class="t-field"><label>Time</label><span>7:00 PM</span></div>
+        <div class="t-field"><label>Guests</label><span>1</span></div>
+        <div class="t-field"><label>Style</label><span>Local Malay cuisine</span></div>
+      </div>
+      <div class="t-note">🍛 A beautiful farewell dinner spot. The paddy field views at dusk are memorable — run by Chef Pia and Jimmy, always warm and welcoming.</div>
+    </div>
+
+    <!-- PRE-TRIP CHECKLIST -->
+    <div class="checklist">
+      <h3>✅ Pre-Trip Checklist</h3>
+      <div class="check-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div><div class="check-label">Book Pelangi Beach Resort</div><div class="check-note">Confirm dates and room type</div></div>
+      </div>
+      <div class="check-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div><div class="check-label">Purchase SkyCab + SkyBridge tickets online</div><div class="check-note">panoramalangkawi.com — book early morning slot</div></div>
+      </div>
+      <div class="check-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div><div class="check-label">Reserve The Cliff Restaurant (Day 1 sunset)</div><div class="check-note">Request beachfront table</div></div>
+      </div>
+      <div class="check-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div><div class="check-label">Reserve Pia's The Padi (Day 2 evening)</div><div class="check-note">Farewell dinner</div></div>
+      </div>
+      <div class="check-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div><div class="check-label">Book island hopping or mangrove tour</div><div class="check-note">Optional — enquire at hotel or Cenang Jetty</div></div>
+      </div>
+      <div class="check-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div><div class="check-label">Arrange airport transfer or car rental</div><div class="check-note">Car rental: RM 70–120/day for full freedom</div></div>
+      </div>
+      <div class="check-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div><div class="check-label">Get Malaysian Ringgit (RM) cash</div><div class="check-note">Night markets & street food are cash-only</div></div>
+      </div>
+      <div class="check-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div><div class="check-label">Check night market schedule vs travel dates</div><div class="check-note">Thursday = Temoyong (Pantai Cenang) — ideal!</div></div>
+      </div>
+      <div class="check-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div><div class="check-label">Pack reef-safe sunscreen & mosquito repellent</div><div class="check-note">Essential for outdoor activities</div></div>
+      </div>
+      <div class="check-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div><div class="check-label">Download offline Langkawi map (Maps.me / Google)</div><div class="check-note">Useful in areas with patchy signal</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// PIN: change '1234' to your preferred 4-digit PIN
+const CORRECT = '1234';
+let entered = '';
+
+function enter(n){
+  if(entered.length>=4) return;
+  entered += n;
+  updateDots();
+  if(entered.length===4){
+    if(entered===CORRECT){
+      document.getElementById('pinScreen').style.display='none';
+      document.getElementById('main').style.display='block';
+    } else {
+      [0,1,2,3].forEach(i=>document.getElementById('d'+i).classList.add('error'));
+      document.getElementById('pinErr').textContent='Incorrect PIN. Try again.';
+      setTimeout(()=>{
+        entered='';
+        [0,1,2,3].forEach(i=>{const d=document.getElementById('d'+i);d.classList.remove('filled','error');});
+        document.getElementById('pinErr').textContent='';
+      },900);
+    }
+  }
+}
+
+function del(){
+  if(entered.length>0){entered=entered.slice(0,-1);updateDots();}
+}
+
+function updateDots(){
+  [0,1,2,3].forEach(i=>{
+    const d=document.getElementById('d'+i);
+    d.classList.toggle('filled',i<entered.length);
+    d.classList.remove('error');
+  });
+}
+
+function lock(){
+  entered='';
+  updateDots();
+  document.getElementById('pinErr').textContent='';
+  document.getElementById('main').style.display='none';
+  document.getElementById('pinScreen').style.display='flex';
+}
+
+function toggleCheck(el){
+  el.classList.toggle('done');
+  el.querySelector('.check-box').textContent = el.classList.contains('done') ? '✓' : '';
+}
+
+// Keyboard support
+document.addEventListener('keydown',e=>{
+  if(document.getElementById('pinScreen').style.display==='none') return;
+  if(e.key>='0'&&e.key<='9') enter(parseInt(e.key));
+  if(e.key==='Backspace') del();
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🌴 Langkawi 2026 — Pavan's Island Escape</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --teal:#0a7c6c;--gold:#c8930a;
+  --ocean:#0c2340;--ocean-soft:#1a3a5c;
+  --warm-gray:#6b7a80;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+html,body{min-height:100%;}
+body{font-family:'DM Sans',sans-serif;background:var(--ocean);min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:0 20px 40px;}
+.topnav{position:sticky;top:0;z-index:100;width:calc(100% + 40px);margin:0 -20px;background:rgba(12,35,64,0.97);backdrop-filter:blur(12px);border-bottom:1px solid rgba(200,147,10,0.25);padding:0 20px;height:52px;display:flex;align-items:center;gap:4px;overflow-x:auto;scrollbar-width:none;flex-shrink:0;}
+.topnav::-webkit-scrollbar{display:none;}
+.tn-logo{font-family:'Playfair Display',serif;color:var(--gold);font-size:17px;font-weight:700;white-space:nowrap;margin-right:10px;flex-shrink:0;text-decoration:none;}
+.tn-div{width:1px;height:18px;background:rgba(255,255,255,0.1);flex-shrink:0;margin:0 4px;}
+.tn-btn{background:none;border:none;cursor:pointer;color:rgba(255,255,255,0.5);font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;white-space:nowrap;padding:5px 10px;border-radius:6px;transition:all 0.18s;flex-shrink:0;text-decoration:none;}
+.tn-btn:hover{color:white;background:rgba(255,255,255,0.1);}
+.tn-btn.active{color:var(--gold);background:rgba(200,147,10,0.18);border:1px solid rgba(200,147,10,0.25);}
+.wrap{max-width:520px;width:100%;text-align:center;padding-top:44px;}
+.flag{font-size:54px;margin-bottom:14px;display:block;animation:bob 3.5s ease-in-out infinite;}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+h1{font-family:'Playfair Display',serif;color:white;font-size:clamp(30px,8vw,42px);font-weight:700;margin-bottom:6px;line-height:1.1;}
+h1 span{color:var(--gold);}
+.names{color:rgba(255,255,255,0.45);font-size:13px;margin-bottom:14px;font-weight:400;letter-spacing:0.3px;}
+.dates{display:inline-flex;align-items:center;gap:8px;background:rgba(200,147,10,0.12);border:1px solid rgba(200,147,10,0.25);border-radius:20px;padding:6px 16px;color:var(--gold);font-size:12px;font-weight:600;margin-bottom:20px;letter-spacing:0.3px;}
+.countdown{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:32px;}
+.cd-cell{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:12px 8px;}
+.cd-num{font-size:clamp(22px,5vw,28px);font-weight:700;color:var(--gold);line-height:1;font-family:'Playfair Display',serif;}
+.cd-lbl{font-size:10px;color:rgba(255,255,255,0.3);letter-spacing:1px;text-transform:uppercase;margin-top:4px;}
+.cd-done{grid-column:1/-1;background:rgba(200,147,10,0.12);border-color:rgba(200,147,10,0.3);padding:14px;}
+.cd-done .cd-num{font-size:20px;color:var(--gold);}
+.stats-row{display:flex;gap:12px;justify-content:center;margin-bottom:32px;flex-wrap:wrap;}
+.stat{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:10px 16px;text-align:center;transition:all 0.2s;}
+.stat:hover{background:rgba(200,147,10,0.1);border-color:rgba(200,147,10,0.3);}
+.stat-n{font-size:20px;font-weight:700;color:white;line-height:1;}
+.stat-l{font-size:10px;color:rgba(255,255,255,0.3);letter-spacing:0.8px;text-transform:uppercase;margin-top:3px;}
+.cards{display:flex;flex-direction:column;gap:10px;margin-bottom:32px;text-align:left;}
+.card{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:16px 18px;text-decoration:none;display:flex;align-items:center;gap:14px;transition:all 0.2s;}
+.card:hover{background:rgba(255,255,255,0.08);border-color:rgba(200,147,10,0.4);border-left:3px solid var(--gold);transform:translateX(4px);box-shadow:0 4px 20px rgba(0,0,0,0.3);}
+.card-icon{width:42px;height:42px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
+.card-body{flex:1;min-width:0;}
+.card-title{color:white;font-size:14px;font-weight:600;margin-bottom:2px;}
+.card-desc{color:rgba(255,255,255,0.35);font-size:11px;line-height:1.45;}
+.card-arrow{width:28px;height:28px;border-radius:8px;background:rgba(255,255,255,0.05);display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.3);font-size:14px;flex-shrink:0;transition:all 0.2s;}
+.card:hover .card-arrow{background:rgba(200,147,10,0.2);color:var(--gold);}
+.route-strip{display:flex;flex-wrap:wrap;gap:5px;justify-content:center;margin-bottom:28px;}
+.route-city{font-size:10px;font-weight:600;color:rgba(255,255,255,0.25);letter-spacing:0.5px;display:flex;align-items:center;gap:4px;}
+.route-city::after{content:'→';color:rgba(255,255,255,0.1);}
+.route-city:last-child::after{content:'';}
+.footer{color:rgba(255,255,255,0.18);font-size:11px;line-height:2;text-align:center;border-top:1px solid rgba(255,255,255,0.06);padding-top:20px;width:100%;max-width:520px;}
+</style>
+</head>
+<body>
+<nav class="topnav">
+  <a class="tn-logo" href="index.html">🌴 Langkawi</a>
+  <div class="tn-div"></div>
+  <a class="tn-btn" href="LANGKAWI_2026_GUIDE.html">📖 Guide</a>
+  <a class="tn-btn" href="LANGKAWI_2026_MAP.html">🗺️ Map</a>
+  <a class="tn-btn" href="LANGKAWI_2026_ITINERARY.html">📋 Itinerary</a>
+  <a class="tn-btn" href="TICKETS.html">🎟️ Bookings</a>
+  <a class="tn-btn active" href="index.html" style="margin-left:auto">🏠 Home</a>
+</nav>
+<div class="wrap">
+  <span class="flag">🌴</span>
+  <h1>Langkawi <span>2026</span></h1>
+  <p class="names">Pavan Abeysinghe</p>
+  <div class="dates">✈️ 2-Day Island Escape &nbsp;·&nbsp; Pelangi Beach Resort</div>
+  <div class="countdown" id="cdGrid">
+    <div class="cd-cell"><div class="cd-num" id="cdD">—</div><div class="cd-lbl">Days</div></div>
+    <div class="cd-cell"><div class="cd-num" id="cdH">—</div><div class="cd-lbl">Hours</div></div>
+    <div class="cd-cell"><div class="cd-num" id="cdM">—</div><div class="cd-lbl">Mins</div></div>
+    <div class="cd-cell"><div class="cd-num" id="cdS">—</div><div class="cd-lbl">Secs</div></div>
+  </div>
+  <div id="cdLabel" style="font-size:11px;color:rgba(255,255,255,0.25);margin-top:-20px;margin-bottom:28px;letter-spacing:0.5px"></div>
+  <div class="stats-row">
+    <div class="stat"><div class="stat-n">2</div><div class="stat-l">Days</div></div>
+    <div class="stat"><div class="stat-n">99</div><div class="stat-l">Islands</div></div>
+    <div class="stat"><div class="stat-n">8</div><div class="stat-l">Attractions</div></div>
+    <div class="stat"><div class="stat-n">6</div><div class="stat-l">Restaurants</div></div>
+    <div class="stat"><div class="stat-n">1</div><div class="stat-l">Resort</div></div>
+  </div>
+  <div class="cards">
+    <a class="card" href="LANGKAWI_2026_GUIDE.html">
+      <div class="card-icon" style="background:rgba(10,124,108,0.25)">📖</div>
+      <div class="card-body">
+        <div class="card-title">Comprehensive Island Guide</div>
+        <div class="card-desc">Attractions · Food & dining · Practical tips · Weather calendar</div>
+      </div>
+      <div class="card-arrow">→</div>
+    </a>
+    <a class="card" href="LANGKAWI_2026_MAP.html">
+      <div class="card-icon" style="background:rgba(44,95,138,0.25)">🗺️</div>
+      <div class="card-body">
+        <div class="card-title">Interactive Map</div>
+        <div class="card-desc">Beaches · Attractions · Restaurants · Hotels · All pinned</div>
+      </div>
+      <div class="card-arrow">→</div>
+    </a>
+    <a class="card" href="LANGKAWI_2026_ITINERARY.html">
+      <div class="card-icon" style="background:rgba(200,147,10,0.18)">📋</div>
+      <div class="card-body">
+        <div class="card-title">Day-by-Day Itinerary</div>
+        <div class="card-desc">Day 1: Beach & sunset · Day 2: SkyCab & SkyBridge</div>
+      </div>
+      <div class="card-arrow">→</div>
+    </a>
+    <a class="card" href="TICKETS.html">
+      <div class="card-icon" style="background:rgba(26,122,74,0.25)">🎟️</div>
+      <div class="card-body">
+        <div class="card-title">Bookings & Tickets</div>
+        <div class="card-desc">Pelangi Resort · SkyCab · Island hopping · Mangrove tour</div>
+      </div>
+      <div class="card-arrow">→</div>
+    </a>
+  </div>
+  <div class="route-strip">
+    <div class="route-city">Pantai Cenang</div>
+    <div class="route-city">Pelangi Resort</div>
+    <div class="route-city">Oriental Village</div>
+    <div class="route-city">SkyBridge</div>
+    <div class="route-city">Telaga Tujuh</div>
+    <div class="route-city">Kilim Geoforest</div>
+    <div class="route-city">Kuah Town</div>
+    <div class="route-city">Tanjung Rhu</div>
+  </div>
+  <div class="footer">
+    <div>Base: Pelangi Beach Resort &amp; Spa · Pantai Cenang · Langkawi</div>
+    <div style="margin-top:6px;color:rgba(255,255,255,0.1)">Selamat datang ke Langkawi! 🌴</div>
+  </div>
+</div>
+<script>
+const DEPART = new Date('2026-06-01T00:00:00+08:00');
+const RETURN = new Date('2026-06-02T23:59:00+08:00');
+const label  = document.getElementById('cdLabel');
+function tick(){
+  const now = new Date(), diff = DEPART - now;
+  const inTrip = now >= DEPART && now <= RETURN, gone = now > RETURN;
+  if(gone){
+    document.getElementById('cdGrid').innerHTML='<div class="cd-cell cd-done" style="grid-column:1/-1"><div class="cd-num">Terima kasih 🌴</div><div class="cd-lbl">What an escape! See you next time, Langkawi!</div></div>';
+    label.textContent='';return;
+  }
+  if(inTrip){
+    const d2=RETURN-now;
+    document.getElementById('cdD').textContent=Math.floor(d2/864e5);
+    document.getElementById('cdH').textContent=Math.floor((d2%864e5)/36e5);
+    document.getElementById('cdM').textContent=Math.floor((d2%36e5)/6e4);
+    document.getElementById('cdS').textContent=Math.floor((d2%6e4)/1e3);
+    label.textContent='🌴 Trip is happening RIGHT NOW!';label.style.color='#c8930a';return;
+  }
+  const dd=Math.floor(diff/864e5),hh=Math.floor((diff%864e5)/36e5),mm=Math.floor((diff%36e5)/6e4),ss=Math.floor((diff%6e4)/1e3);
+  document.getElementById('cdD').textContent=dd;
+  document.getElementById('cdH').textContent=String(hh).padStart(2,'0');
+  document.getElementById('cdM').textContent=String(mm).padStart(2,'0');
+  document.getElementById('cdS').textContent=String(ss).padStart(2,'0');
+  label.textContent='until your Langkawi escape · Pelangi Beach Resort';
+}
+tick();setInterval(tick,1000);
+</script>
+</body>
+</html>

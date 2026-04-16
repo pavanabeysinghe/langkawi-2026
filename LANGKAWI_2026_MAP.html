@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>🌴 Langkawi 2026 — Interactive Map</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --teal:#0a7c6c;--gold:#c8930a;--ocean:#0c2340;--ocean-soft:#1a3a5c;
+  --cream:#faf8f3;--parchment:#f1ebe0;--warm-gray:#6b7a80;--white:#fff;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{height:100%;overflow:hidden;font-family:'DM Sans',sans-serif;background:var(--ocean);}
+.app{display:flex;flex-direction:column;height:100vh;}
+
+/* HEADER */
+.header{background:var(--ocean);border-bottom:1px solid rgba(200,147,10,0.3);padding:0 16px;display:flex;align-items:center;gap:8px;height:50px;flex-shrink:0;}
+.hlogo{font-family:'Playfair Display',serif;color:var(--gold);font-size:17px;font-weight:700;flex-shrink:0;text-decoration:none;}
+.htitle{color:rgba(255,255,255,0.5);font-size:12px;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.hbtn{background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.12);color:rgba(255,255,255,0.75);font-size:12px;font-weight:500;padding:5px 10px;border-radius:6px;cursor:pointer;font-family:'DM Sans',sans-serif;text-decoration:none;transition:all 0.2s;white-space:nowrap;flex-shrink:0;}
+.hbtn:hover{background:rgba(255,255,255,0.15);color:white;}
+.hbtn.gold{background:rgba(200,147,10,0.15);border-color:rgba(200,147,10,0.3);color:var(--gold);}
+.hbtn.gold:hover{background:var(--gold);color:var(--ocean);}
+
+/* BODY */
+.body{display:flex;flex:1;overflow:hidden;}
+
+/* SIDEBAR */
+.sidebar{width:280px;flex-shrink:0;background:var(--cream);display:flex;flex-direction:column;overflow:hidden;border-right:1px solid var(--parchment);}
+
+/* FILTER */
+.filter-row{padding:8px 10px;background:var(--white);border-bottom:1px solid var(--parchment);display:flex;flex-wrap:wrap;align-items:center;gap:6px;}
+.filter-btn{display:flex;align-items:center;gap:4px;background:var(--parchment);border:1.5px solid transparent;border-radius:20px;padding:4px 10px;font-size:11px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.15s;color:var(--ocean);}
+.filter-btn.active{background:var(--teal);color:white;border-color:var(--teal);}
+.filter-btn[data-cat="restaurant"].active{background:#c04a1a;border-color:#c04a1a;}
+.filter-btn[data-cat="hotel"].active{background:var(--ocean-soft);border-color:var(--ocean-soft);}
+.filter-btn[data-cat="nature"].active{background:#2d6a4f;border-color:#2d6a4f;}
+.filter-btn[data-cat="beach"].active{background:#d4a017;border-color:#d4a017;}
+
+/* PLACE LIST */
+.place-list{flex:1;overflow-y:auto;padding:8px;}
+.place-list::-webkit-scrollbar{width:4px;}
+.place-list::-webkit-scrollbar-thumb{background:var(--parchment);border-radius:4px;}
+.place-item{background:var(--white);border-radius:10px;padding:12px 14px;margin-bottom:8px;cursor:pointer;border:1px solid var(--parchment);transition:all 0.15s;display:flex;gap:10px;align-items:flex-start;}
+.place-item:hover,.place-item.active{background:var(--teal);border-color:var(--teal);}
+.place-item:hover .pi-name,.place-item.active .pi-name{color:white;}
+.place-item:hover .pi-desc,.place-item.active .pi-desc{color:rgba(255,255,255,0.7);}
+.pi-icon{font-size:18px;flex-shrink:0;margin-top:1px;}
+.pi-name{font-size:13px;font-weight:600;color:var(--ocean);margin-bottom:2px;}
+.pi-desc{font-size:11px;color:var(--warm-gray);line-height:1.45;}
+.pi-badge{display:inline-block;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1px;background:var(--teal);color:white;border-radius:4px;padding:1px 6px;margin-top:4px;}
+.pi-badge.r{background:#c04a1a;}
+.pi-badge.h{background:var(--ocean-soft);}
+.pi-badge.n{background:#2d6a4f;}
+.pi-badge.b{background:#d4a017;}
+
+/* MAP */
+.map-wrap{flex:1;position:relative;}
+#map{width:100%;height:100%;}
+.day-legend{position:absolute;bottom:16px;right:16px;z-index:1000;background:rgba(12,35,64,0.9);border:1px solid rgba(200,147,10,0.3);border-radius:12px;padding:12px 16px;color:white;font-size:12px;min-width:130px;}
+.day-legend-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--gold);margin-bottom:8px;}
+.dl-item{display:flex;align-items:center;gap:8px;margin-bottom:6px;cursor:pointer;opacity:0.7;transition:opacity 0.15s;}
+.dl-item:hover{opacity:1;}
+.dl-item.active{opacity:1;}
+.dl-dot{width:12px;height:12px;border-radius:50%;flex-shrink:0;}
+
+/* MOBILE */
+@media(max-width:640px){.sidebar{display:none;}.body{flex-direction:column;}}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="header">
+    <a class="hlogo" href="index.html">🌴 Langkawi</a>
+    <span class="htitle">Interactive Map · 20 locations pinned</span>
+    <a class="hbtn" href="LANGKAWI_2026_ITINERARY.html">📋 Itinerary</a>
+    <a class="hbtn gold" href="index.html">🏠 Home</a>
+  </div>
+  <div class="body">
+    <div class="sidebar">
+      <div class="filter-row">
+        <button class="filter-btn active" data-cat="all" onclick="filterCat('all',this)">All</button>
+        <button class="filter-btn" data-cat="attraction" onclick="filterCat('attraction',this)">🏛 Sights</button>
+        <button class="filter-btn" data-cat="beach" onclick="filterCat('beach',this)">🏖 Beach</button>
+        <button class="filter-btn" data-cat="restaurant" onclick="filterCat('restaurant',this)">🍽 Food</button>
+        <button class="filter-btn" data-cat="nature" onclick="filterCat('nature',this)">🌿 Nature</button>
+        <button class="filter-btn" data-cat="hotel" onclick="filterCat('hotel',this)">🏨 Hotels</button>
+      </div>
+      <div class="place-list" id="placeList"></div>
+    </div>
+    <div class="map-wrap">
+      <div id="map"></div>
+      <div class="day-legend">
+        <div class="day-legend-title">Filter by Day</div>
+        <div class="dl-item active" onclick="filterDay('all',this)"><div class="dl-dot" style="background:#888"></div>All locations</div>
+        <div class="dl-item" onclick="filterDay('1',this)"><div class="dl-dot" style="background:#0a7c6c"></div>Day 1</div>
+        <div class="dl-item" onclick="filterDay('2',this)"><div class="dl-dot" style="background:#1a3a5c"></div>Day 2</div>
+        <div class="dl-item" onclick="filterDay('opt',this)"><div class="dl-dot" style="background:#c8930a"></div>Optional</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+const PLACES = [
+  // HOTELS
+  {id:1,name:"Pelangi Beach Resort & Spa",cat:"hotel",day:"1",icon:"🏨",lat:6.2491,lng:99.7188,desc:"Your base · Beachfront resort on Pantai Cenang",badge:"h"},
+  // BEACHES
+  {id:2,name:"Pantai Cenang",cat:"beach",day:"1",icon:"🏖️",lat:6.2465,lng:99.7155,desc:"Main beach strip · Lively bars & restaurants",badge:"b"},
+  {id:3,name:"Pantai Tengah",cat:"beach",day:"1",icon:"🏖️",lat:6.2310,lng:99.7175,desc:"Quieter beach · 10 min south of Cenang",badge:"b"},
+  {id:4,name:"Tanjung Rhu Beach",cat:"beach",day:"opt",icon:"🏝️",lat:6.4200,lng:99.8700,desc:"Malaysia's most beautiful beach · Pristine & secluded",badge:"b"},
+  // ATTRACTIONS
+  {id:5,name:"Oriental Village",cat:"attraction",day:"2",icon:"🏘️",lat:6.3780,lng:99.6720,desc:"Colourful open-air complex · SkyCab base station",badge:""},
+  {id:6,name:"Langkawi SkyBridge",cat:"attraction",day:"2",icon:"🌉",lat:6.3760,lng:99.6700,desc:"World's longest curved suspension bridge · 125m",badge:""},
+  {id:7,name:"Eagle Square (Dataran Lang)",cat:"attraction",day:"opt",icon:"🦅",lat:6.3200,lng:99.8500,desc:"12m eagle statue · Langkawi icon · Near Kuah",badge:""},
+  {id:8,name:"Underwater World Langkawi",cat:"attraction",day:"opt",icon:"🐧",lat:6.2530,lng:99.7260,desc:"SE Asia's largest aquarium · Walk-through tunnel",badge:""},
+  {id:9,name:"3D Art Museum",cat:"attraction",day:"2",icon:"🎨",lat:6.3770,lng:99.6710,desc:"200+ optical illusion murals · At Oriental Village",badge:""},
+  // NATURE
+  {id:10,name:"Telaga Tujuh (Seven Wells)",cat:"nature",day:"2",icon:"💧",lat:6.3720,lng:99.6650,desc:"Seven cascading natural pools · Short jungle hike",badge:"n"},
+  {id:11,name:"Kilim Karst Geoforest Park",cat:"nature",day:"opt",icon:"🌿",lat:6.4500,lng:99.8800,desc:"UNESCO Geopark · Mangrove boat tours · Eagles",badge:"n"},
+  {id:12,name:"Machinchang Summit (SkyCab Top)",cat:"nature",day:"2",icon:"⛰️",lat:6.3780,lng:99.6680,desc:"708m summit · One of the world's steepest cable cars",badge:"n"},
+  {id:13,name:"Dayang Bunting Lake",cat:"nature",day:"opt",icon:"🏞️",lat:6.1700,lng:99.7500,desc:"Freshwater lake inside a limestone island",badge:"n"},
+  // RESTAURANTS
+  {id:14,name:"Orkid Ria Seafood",cat:"restaurant",day:"1",icon:"🦞",lat:6.2480,lng:99.7165,desc:"Best seafood in Cenang · Lobster, tiger prawns",badge:"r"},
+  {id:15,name:"The Cliff Restaurant",cat:"restaurant",day:"1",icon:"🌅",lat:6.2460,lng:99.7150,desc:"Sunset views over Andaman Sea · Malay-Western fusion",badge:"r"},
+  {id:16,name:"Pia's The Padi",cat:"restaurant",day:"2",icon:"🌾",lat:6.2580,lng:99.7220,desc:"Paddy field views · Excellent local Malay cuisine",badge:"r"},
+  {id:17,name:"FatCUPID Restaurant",cat:"restaurant",day:"1",icon:"🍔",lat:6.2400,lng:99.7160,desc:"Pantai Tengah · Local fusion · Nyonya laksa",badge:"r"},
+  {id:18,name:"Wonderland Food Store",cat:"restaurant",day:"opt",icon:"🐟",lat:6.3180,lng:99.8450,desc:"Fresh waterfront seafood · Kuah Town",badge:"r"},
+  {id:19,name:"Temoyong Night Market",cat:"restaurant",day:"1",icon:"🌙",lat:6.2500,lng:99.7190,desc:"Thu nights · 50+ stalls · Ikan bakar & local food",badge:"r"},
+  {id:20,name:"Langkawi Airport",cat:"attraction",day:"1",icon:"✈️",lat:6.3297,lng:99.7286,desc:"Langkawi International Airport",badge:""},
+];
+
+const catColors={all:"#888",attraction:"#0a7c6c",beach:"#d4a017",restaurant:"#c04a1a",nature:"#2d6a4f",hotel:"#1a3a5c"};
+const dayColors={1:"#0a7c6c",2:"#1a3a5c",opt:"#c8930a"};
+
+const map = L.map('map',{center:[6.32,99.77],zoom:12});
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap'}).addTo(map);
+
+let markers={}, currentCat='all', currentDay='all';
+
+function makeIcon(place){
+  const col = dayColors[place.day]||'#888';
+  return L.divIcon({
+    className:'',
+    html:`<div style="background:${col};width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;border:2px solid white;box-shadow:0 2px 8px rgba(0,0,0,0.3)">${place.icon}</div>`,
+    iconSize:[32,32],iconAnchor:[16,16],popupAnchor:[0,-18]
+  });
+}
+
+PLACES.forEach(p=>{
+  const m = L.marker([p.lat,p.lng],{icon:makeIcon(p)})
+    .addTo(map)
+    .bindPopup(`<div style="font-family:'DM Sans',sans-serif;min-width:160px"><div style="font-size:15px;margin-bottom:4px">${p.icon} <strong>${p.name}</strong></div><div style="font-size:12px;color:#666;line-height:1.5">${p.desc}</div></div>`);
+  m.on('click',()=>highlightItem(p.id));
+  markers[p.id]=m;
+});
+
+function renderList(cat='all', day='all'){
+  const list=document.getElementById('placeList');
+  list.innerHTML='';
+  PLACES.filter(p=>(cat==='all'||p.cat===cat)&&(day==='all'||p.day===day)).forEach(p=>{
+    const div=document.createElement('div');
+    div.className='place-item';div.dataset.id=p.id;
+    div.innerHTML=`<span class="pi-icon">${p.icon}</span><div><div class="pi-name">${p.name}</div><div class="pi-desc">${p.desc}</div><span class="pi-badge ${p.badge}">${p.cat.toUpperCase()}</span></div>`;
+    div.onclick=()=>{flyTo(p);highlightItem(p.id);};
+    list.appendChild(div);
+  });
+}
+
+function flyTo(p){
+  map.flyTo([p.lat,p.lng],14,{duration:0.8});
+  markers[p.id].openPopup();
+}
+
+function highlightItem(id){
+  document.querySelectorAll('.place-item').forEach(el=>el.classList.toggle('active',el.dataset.id==id));
+}
+
+function filterCat(cat,btn){
+  currentCat=cat;
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  updateVisibility();renderList(currentCat,currentDay);
+}
+
+function filterDay(day,el){
+  currentDay=day;
+  document.querySelectorAll('.dl-item').forEach(e=>e.classList.remove('active'));
+  el.classList.add('active');
+  updateVisibility();renderList(currentCat,currentDay);
+}
+
+function updateVisibility(){
+  PLACES.forEach(p=>{
+    const catOk=currentCat==='all'||p.cat===currentCat;
+    const dayOk=currentDay==='all'||p.day===currentDay;
+    if(catOk&&dayOk) markers[p.id].addTo(map);
+    else map.removeLayer(markers[p.id]);
+  });
+}
+
+renderList();
+</script>
+</body>
+</html>
